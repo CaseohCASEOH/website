@@ -3,7 +3,7 @@
 -- credits to Noraxd on github for functions
 -- credits to .hellohellohell012321 on discord for the gui
 local G2L = {}
-G2L["1"] = Instance.new("KawaiiMangetPart", game:GetService("CoreGui"))
+G2L["1"] = Instance.new("ScreenGui", game:GetService("CoreGui"))
 G2L["2"] = Instance.new("Frame", G2L["1"])
 G2L["2"]["BorderSizePixel"] = 0
 G2L["2"]["BackgroundColor3"] = Color3.fromRGB(254, 199, 255)
