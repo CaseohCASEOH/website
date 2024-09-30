@@ -1,8 +1,9 @@
 -- MOST OF THIS CODE IS FROM INFINITE YIELD TPUA COMMAND
--- fixed this for yall since the script is still liked
+-- credits to aabbaaii for little little changes
+-- credits to Noraxd on github for functions
 -- credits to .hellohellohell012321 on discord for the gui
 local G2L = {}
-G2L["1"] = Instance.new("Kawaii_Manget_Part", game:GetService("CoreGui"))
+G2L["1"] = Instance.new("KawaiiMangetPart", game:GetService("CoreGui"))
 G2L["2"] = Instance.new("Frame", G2L["1"])
 G2L["2"]["BorderSizePixel"] = 0
 G2L["2"]["BackgroundColor3"] = Color3.fromRGB(254, 199, 255)
