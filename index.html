@@ -3,94 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abaui Verification</title>
+    <title>What Is My IPV4/IPV6</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
+            text-align: center;
         }
         .container {
-            text-align: center;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background: #fff;
-            width: 300px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-        .captcha-box {
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #e1e1e1;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
         }
-        input {
-            width: calc(100% - 20px);
-            padding: 8px;
+        p {
+            font-size: 1.2rem;
             margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
         }
         button {
-            padding: 10px 20px;
-            background-color: #007bff;
+            background: #2575fc;
             color: white;
             border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
             border-radius: 5px;
             cursor: pointer;
+            transition: 0.3s ease;
         }
         button:hover {
-            background-color: #0056b3;
+            background: #6a11cb;
+        }
+        .ip-display {
+            margin: 15px 0;
+            font-size: 1.5rem;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>CAPTCHA Verification</h2>
-        <div id="captchaBox" class="captcha-box"></div>
-        <input type="text" id="captchaInput" placeholder="Enter CAPTCHA" required>
-        <button onclick="verifyCaptcha()">Submit</button>
-        <button onclick="generateCaptcha()">Refresh CAPTCHA</button>
-        <p id="message" style="color: red; margin-top: 10px;"></p>
+        <h1>IP Address Checker</h1>
+        <p>Click the button below to check your IPv4 and IPv6 address.</p>
+        <button onclick="getIP()">Get My IP</button>
+        <div class="ip-display" id="ip-display">Your IP will appear here</div>
     </div>
 
     <script>
-        let captchaText = "";
+        function getIP() {
+            fetch('https://api64.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ip-display').innerText = `Your IPv6: ${data.ip}`;
+                })
+                .catch(() => {
+                    document.getElementById('ip-display').innerText = "Unable to fetch your IPv6.";
+                });
 
-        // Generate a new CAPTCHA
-        function generateCaptcha() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            captchaText = '';
-            for (let i = 0; i < 6; i++) {
-                captchaText += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            document.getElementById("captchaBox").innerText = captchaText;
-            document.getElementById("message").innerText = "";
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ip-display').innerText += `\nYour IPv4: ${data.ip}`;
+                })
+                .catch(() => {
+                    document.getElementById('ip-display').innerText += "\nUnable to fetch your IPv4.";
+                });
         }
-
-        // Verify the user's input
-        function verifyCaptcha() {
-            const userInput = document.getElementById("captchaInput").value;
-            if (userInput === captchaText) {
-                document.getElementById("message").innerText = "CAPTCHA Verified Successfully!";
-                document.getElementById("message").style.color = "green";
-            } else {
-                document.getElementById("message").innerText = "CAPTCHA Verification Failed. Try Again!";
-                document.getElementById("message").style.color = "red";
-            }
-        }
-
-        // Initialize the CAPTCHA on page load
-        window.onload = generateCaptcha;
     </script>
 </body>
 </html>
