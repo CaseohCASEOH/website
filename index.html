@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What Is My IPV4/IPV6</title>
+    <title>IPv4 And IPv6 Checker</title>
     <style>
         * {
             margin: 0;
@@ -27,61 +27,41 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         h1 {
-            font-size: 2rem;
-            margin-bottom: 15px;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
         }
         p {
             font-size: 1.2rem;
-            margin: 10px 0;
-        }
-        button {
-            background: #2575fc;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s ease;
-        }
-        button:hover {
-            background: #6a11cb;
-        }
-        .ip-display {
-            margin: 15px 0;
-            font-size: 1.5rem;
             font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>IP Address Checker</h1>
-        <p>Click the button below to check your IPv4 and IPv6 address.</p>
-        <button onclick="getIP()">Get My IP</button>
-        <div class="ip-display" id="ip-display">Your IP will appear here</div>
+        <h1>Your IP Addresses:</h1>
+        <p id="ipv6">Loading IPv6...</p>
+        <p id="ipv4">Loading IPv4...</p>
     </div>
 
     <script>
-        function getIP() {
-            fetch('https://api64.ipify.org?format=json')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('ip-display').innerText = `Your IPv6: ${data.ip}`;
-                })
-                .catch(() => {
-                    document.getElementById('ip-display').innerText = "Unable to fetch your IPv6.";
-                });
 
-            fetch('https://api.ipify.org?format=json')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('ip-display').innerText += `\nYour IPv4: ${data.ip}`;
-                })
-                .catch(() => {
-                    document.getElementById('ip-display').innerText += "\nUnable to fetch your IPv4.";
-                });
-        }
+        fetch('https://api64.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ipv6').innerText = `IPv6: ${data.ip}`;
+            })
+            .catch(() => {
+                document.getElementById('ipv6').innerText = "IPv6: unable to get ipv6.";
+            });
+
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ipv4').innerText = `IPv4: ${data.ip}`;
+            })
+            .catch(() => {
+                document.getElementById('ipv4').innerText = "IPv4: unable to get ipv4.";
+            });
     </script>
 </body>
 </html>
