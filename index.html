@@ -3,113 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Mountain</title>
+    <title>3D Earth</title>
     <style>
-        /* Full-screen background for the 3D model view */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             background-color: #222222;
+            overflow: hidden;
         }
 
         #container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
-            width: 100%;
         }
 
-        canvas {
+        canvas { 
             display: block;
             width: 100%;
             height: 100%;
         }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-size: 2rem;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
-    <!-- Canvas element for Three.js 3D rendering -->
-    <div id="container">
-        <canvas id="webgl-canvas"></canvas>
-    </div>
 
-    <!-- Three.js library, including GLTFLoader for model import -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/loaders/GLTFLoader.min.js"></script>
+<!-- Loading screen -->
+<div id="loading">Loading Model...</div>
 
-    <script>
-        // Initialize Scene, Camera, and Renderer
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+<!-- Three.js canvas -->
+<div id="container">
+    <canvas id="webgl-canvas"></canvas>
+</div>
 
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('webgl-canvas') });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/loaders/GLTFLoader.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/controls/OrbitControls.min.js"></script>
+
+<script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('webgl-canvas') });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const loader = new THREE.GLTFLoader();
+
+    // Load the large .glb model (mountain.glb, make sure the model path is correct)
+    loader.load('mountain.glb', function (gltf) {
+        const model = gltf.scene;
+        scene.add(model);
+        model.scale.set(1, 1, 1); // Adjust the scale of the model
+        model.position.set(0, 0, 0);
+
+        // Add light to illuminate the model
+        const light = new THREE.AmbientLight(0x404040, 1);
+        scene.add(light);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(1, 1, 1).normalize();
+        scene.add(directionalLight);
+
+        // Hide loading screen once the model has loaded
+        document.getElementById('loading').style.display = 'none';
+
+    }, function (xhr) {
+        // Log the progress of the loading (optional)
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    }, function (error) {
+        // Error handling
+        console.error(error);
+    });
+
+    // Camera positioning and control
+    camera.position.z = 5;
+
+    // Orbit Controls for desktop (mouse support)
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;  // Smooth rotation effect
+    controls.dampingFactor = 0.25;
+    controls.screenSpacePanning = false;
+    controls.maxPolarAngle = Math.PI / 2; // Prevent rotation past vertical limits
+
+    // Handle window resizing
+    window.addEventListener('resize', () => {
         renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+    });
 
-        // Load the 3D Model with mountain texture (use your specific model path here)
-        const loader = new THREE.GLTFLoader();
-        loader.load('mountain.glb', function(gltf) {
-            const model = gltf.scene;
-            scene.add(model);
+    // Auto-spin for mobile and desktop fallback
+    let isMobile = false;
+    if (window.innerWidth <= 768) {
+        isMobile = true;
+    }
 
-            model.scale.set(1, 1, 1); // Adjust scale as needed
-            model.position.set(0, 0, 0);
+    if (isMobile) {
+        // Implement automatic 360 degree rotation for mobile devices
+        const spinSpeed = 0.002;
 
-            // Add Ambient Lighting to the Scene
-            const light = new THREE.AmbientLight(0x404040, 1); // Soft white light
-            scene.add(light);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(1, 1, 1).normalize();
-            scene.add(directionalLight);
-            
-        }, undefined, function (error) {
-            console.error(error);
-        });
-
-        // Camera positioning
-        camera.position.z = 5;
-
-        // Mouse drag controls for rotating the model
-        let isMouseDown = false;
-        let previousMousePosition = { x: 0, y: 0 };
-
-        window.addEventListener('mousedown', (e) => {
-            isMouseDown = true;
-            previousMousePosition = { x: e.clientX, y: e.clientY };
-        });
-
-        window.addEventListener('mouseup', () => {
-            isMouseDown = false;
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!isMouseDown) return;
-
-            const deltaMove = {
-                x: e.clientX - previousMousePosition.x,
-                y: e.clientY - previousMousePosition.y
-            };
-
-            scene.rotation.y += deltaMove.x * 0.01; // Rotate scene horizontally
-            scene.rotation.x += deltaMove.y * 0.01; // Rotate scene vertically
-            
-            previousMousePosition = { x: e.clientX, y: e.clientY };
-        });
-
-        // Handle resizing the canvas when window is resized
-        window.addEventListener('resize', () => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-        });
-
-        // Animation loop to render the scene and update the rotation
         function animate() {
             requestAnimationFrame(animate);
+            scene.rotation.y += spinSpeed; // Rotate model constantly for 360-degree spin
             renderer.render(scene, camera);
         }
-        animate();
-    </script>
+        animate();  // Start animation loop
+    } else {
+        // Use mouse interaction and orbit controls on PC
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();  // Required for damping effect to work
+            renderer.render(scene, camera);
+        }
+        animate();  // Start animation loop
+    }
+</script>
+
 </body>
 </html>
