@@ -1,67 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPv4 And IPv6 Checker</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-        }
-        .container {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-        h1 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        p {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Short Videos Platform</title>
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background: #111;
+      padding: 20px;
+      text-align: center;
+      width: 100%;
+      box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
+      color: #e50914;
+    }
+
+    main {
+      overflow-y: scroll;
+      height: calc(100vh - 60px);
+      width: 100%;
+    }
+
+    .video-card {
+      position: relative;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    video {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .overlay {
+      position: absolute;
+      bottom: 15%;
+      left: 5%;
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-btn {
+      padding: 10px;
+      background: #444;
+      border: none;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .action-btn:hover {
+      background: #555;
+    }
+
+    .likes,
+    .comments {
+      background: #e50914;
+      color: #fff;
+      padding: 5px 15px;
+      border-radius: 10px;
+      margin-top: 5px;
+      text-align: center;
+    }
+
+    .comments-section {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px;
+      background: #111;
+    }
+
+    .comments-section.active {
+      display: flex;
+    }
+
+    .comment-input {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .comment-input input {
+      flex: 1;
+      padding: 5px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .comment-input button {
+      padding: 5px 10px;
+      background: #e50914;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Your IP Addresses:</h1>
-        <p id="ipv6">IPv6 Loading...</p>
-        <p id="ipv4">IPv4 Loading...</p>
-    </div>
+  <div class="container">
+    <header>
+      <h1>Shorts Clone</h1>
+    </header>
 
-    <script>
+    <main id="video-feed">
+      <div class="video-card">
+        <video src="https://www.w3schools.com/html/mov_bbb.mp4" loop></video>
+        <div class="overlay">
+          <button class="action-btn like-btn">❤️</button>
+          <button class="action-btn comment-btn">💬</button>
+        </div>
+        <div class="likes">Likes: <span>0</span></div>
+        <div class="comments">
+          Comments: <span>0</span>
+          <div class="comments-section">
+            <div class="comments-list"></div>
+            <div class="comment-input">
+              <input type="text" placeholder="Add a comment" />
+              <button>Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        fetch('https://api64.ipify.org?format=json')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('ipv6').innerText = `IPv6: ${data.ip}`;
-            })
-            .catch(() => {
-                document.getElementById('ipv6').innerText = "IPv6: unable to get ipv6.";
-            });
+      <div class="video-card">
+        <video src="https://www.w3schools.com/html/movie.mp4" loop></video>
+        <div class="overlay">
+          <button class="action-btn like-btn">❤️</button>
+          <button class="action-btn comment-btn">💬</button>
+        </div>
+        <div class="likes">Likes: <span>0</span></div>
+        <div class="comments">
+          Comments: <span>0</span>
+          <div class="comments-section">
+            <div class="comments-list"></div>
+            <div class="comment-input">
+              <input type="text" placeholder="Add a comment" />
+              <button>Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
 
-        fetch('https://api.ipify.org?format=json')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('ipv4').innerText = `IPv4: ${data.ip}`;
-            })
-            .catch(() => {
-                document.getElementById('ipv4').innerText = "IPv4: unable to get ipv4.";
-            });
-    </script>
+  <script>
+    // JavaScript for Interactions
+    document.addEventListener("DOMContentLoaded", () => {
+      // Handle Like Buttons
+      const likeButtons = document.querySelectorAll(".like-btn");
+      likeButtons.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const likes = e.target.closest(".video-card").querySelector(".likes span");
+          likes.textContent = parseInt(likes.textContent) + 1;
+        });
+      });
+
+      // Handle Comment Buttons
+      const commentButtons = document.querySelectorAll(".comment-btn");
+      commentButtons.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const commentsSection = e.target.closest(".video-card").querySelector(".comments-section");
+          commentsSection.classList.toggle("active");
+        });
+      });
+
+      // Add Comments
+      const commentInputs = document.querySelectorAll(".comment-input");
+      commentInputs.forEach((inputDiv) => {
+        const input = inputDiv.querySelector("input");
+        const sendButton = inputDiv.querySelector("button");
+        const commentsList = inputDiv.closest(".comments-section").querySelector(".comments-list");
+
+        sendButton.addEventListener("click", () => {
+          if (input.value.trim()) {
+            const comment = document.createElement("div");
+            comment.textContent = input.value;
+            commentsList.appendChild(comment);
+
+            const commentCount = inputDiv.closest(".comments").querySelector("span");
+            commentCount.textContent = parseInt(commentCount.textContent) + 1;
+
+            input.value = "";
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
