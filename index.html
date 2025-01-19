@@ -1,309 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TikTok Clone</title>
-  <style>
-    /* Global Styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #000;
-      color: white;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Mountain</title>
+    <style>
+        /* Full-screen background for the 3D model view */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #222222;
+        }
 
-    /* Header */
-    header {
-      background-color: #111;
-      padding: 10px 20px;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
-      color: #e50914;
-    }
+        #container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
 
-    /* Main feed container */
-    #video-feed {
-      height: calc(100vh - 70px);
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* Video Card */
-    .video-card {
-      width: 100%;
-      max-width: 500px;
-      position: relative;
-      margin-bottom: 20px;
-      border-radius: 15px;
-      overflow: hidden;
-    }
-
-    video {
-      width: 100%;
-      border-radius: 10px;
-      transition: transform 0.3s ease-in-out;
-    }
-
-    /* Video overlay buttons (like, comment, etc.) */
-    .overlay {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      display: none;
-      color: white;
-    }
-
-    .video-card:hover video {
-      transform: scale(1.1);
-    }
-
-    /* Button Styles */
-    .action-btn {
-      background: rgba(255, 255, 255, 0.8);
-      padding: 20px;
-      border-radius: 50%;
-      margin: 10px 20px;
-      cursor: pointer;
-      transition: background 0.3s;
-      font-size: 30px;
-    }
-
-    .action-btn:hover {
-      background: rgba(255, 255, 255, 0.4);
-    }
-
-    /* Like and Comments Section */
-    .likes, .comments {
-      text-align: center;
-      font-size: 18px;
-      padding: 10px 0;
-    }
-
-    /* Comment Section */
-    .comment-input {
-      display: flex;
-      margin-top: 10px;
-      padding: 10px 20px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 5px;
-      width: 90%;
-      max-width: 480px;
-    }
-
-    .comment-input input {
-      width: 100%;
-      padding: 5px;
-      border: none;
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-
-    .comment-input button {
-      background-color: #e50914;
-      border: none;
-      padding: 10px 20px;
-      color: white;
-      font-weight: bold;
-      border-radius: 5px;
-      margin-left: 10px;
-      cursor: pointer;
-    }
-
-    /* Forms */
-    .auth-form {
-      padding: 30px;
-      text-align: center;
-      background-color: #333;
-      max-width: 400px;
-      margin: 50px auto;
-      border-radius: 8px;
-    }
-
-    .auth-form input {
-      padding: 12px;
-      width: 100%;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      border: none;
-    }
-
-    /* Hide Forms */
-    .hidden {
-      display: none;
-    }
-
-  </style>
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
-
-<!-- Header -->
-<header>
-  <h1>TikTok Clone</h1>
-</header>
-
-<!-- Video Feed -->
-<main id="video-feed">
-  <div class="video-card">
-    <video src="https://www.w3schools.com/html/mov_bbb.mp4" loop muted></video>
-    <div class="overlay">
-      <div>
-        <button class="action-btn like-btn">❤️</button>
-        <button class="action-btn comment-btn">💬</button>
-      </div>
+    <!-- Canvas element for Three.js 3D rendering -->
+    <div id="container">
+        <canvas id="webgl-canvas"></canvas>
     </div>
-    <div class="likes">Likes: <span>0</span></div>
-    <div class="comments">
-      Comments: <span>0</span>
-    </div>
-    <div class="comments-section hidden">
-      <div class="comments-list"></div>
-      <div class="comment-input">
-        <input type="text" placeholder="Add a comment" />
-        <button>Send</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- Video 2 (Can replicate further) -->
-  <div class="video-card">
-    <video src="https://www.w3schools.com/html/movie.mp4" loop muted></video>
-    <div class="overlay">
-      <div>
-        <button class="action-btn like-btn">❤️</button>
-        <button class="action-btn comment-btn">💬</button>
-      </div>
-    </div>
-    <div class="likes">Likes: <span>0</span></div>
-    <div class="comments">
-      Comments: <span>0</span>
-    </div>
-    <div class="comments-section hidden">
-      <div class="comments-list"></div>
-      <div class="comment-input">
-        <input type="text" placeholder="Add a comment" />
-        <button>Send</button>
-      </div>
-    </div>
-  </div>
-</main>
+    <!-- Three.js library, including GLTFLoader for model import -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/loaders/GLTFLoader.min.js"></script>
 
-<!-- Auth Forms (Login / Signup) -->
-<div class="auth-form hidden" id="login-form">
-  <h2>Login</h2>
-  <input type="email" id="login-email" placeholder="Email" />
-  <input type="password" id="login-password" placeholder="Password" />
-  <button id="login-btn">Login</button>
-  <p>Don't have an account? <a href="#" id="go-to-signup">Sign Up</a></p>
-</div>
+    <script>
+        // Initialize Scene, Camera, and Renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-<div class="auth-form hidden" id="signup-form">
-  <h2>Sign Up</h2>
-  <input type="email" id="signup-email" placeholder="Email" />
-  <input type="password" id="signup-password" placeholder="Password" />
-  <button id="signup-btn">Sign Up</button>
-  <p>Already have an account? <a href="#" id="go-to-login">Login</a></p>
-</div>
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('webgl-canvas') });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-<script>
-  // Sample data storage
-  let users = JSON.parse(localStorage.getItem('users')) || [];
-  let loggedInUser = localStorage.getItem('loggedInUser');
-  
-  // Show auth forms
-  const showLoginForm = document.getElementById('login-form');
-  const showSignupForm = document.getElementById('signup-form');
-  
-  // Event Listeners
-  document.getElementById('go-to-signup').addEventListener('click', () => {
-    showLoginForm.classList.add('hidden');
-    showSignupForm.classList.remove('hidden');
-  });
+        // Load the 3D Model with mountain texture (use your specific model path here)
+        const loader = new THREE.GLTFLoader();
+        loader.load('mountain.glb', function(gltf) {
+            const model = gltf.scene;
+            scene.add(model);
 
-  document.getElementById('go-to-login').addEventListener('click', () => {
-    showSignupForm.classList.add('hidden');
-    showLoginForm.classList.remove('hidden');
-  });
+            model.scale.set(1, 1, 1); // Adjust scale as needed
+            model.position.set(0, 0, 0);
 
-  // Handle Sign Up
-  document.getElementById('signup-btn').addEventListener('click', () => {
-    const email = document.getElementById('signup-email').value;
-    const password = document.getElementById('signup-password').value;
+            // Add Ambient Lighting to the Scene
+            const light = new THREE.AmbientLight(0x404040, 1); // Soft white light
+            scene.add(light);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            scene.add(directionalLight);
+            
+        }, undefined, function (error) {
+            console.error(error);
+        });
 
-    if (email && password) {
-      const existingUser = users.find(user => user.email === email);
-      if (!existingUser) {
-        users.push({ email, password });
-        localStorage.setItem('users', JSON.stringify(users));
-        alert('Signup successful!');
-        showSignupForm.classList.add('hidden');
-        showLoginForm.classList.remove('hidden');
-      } else {
-        alert('User already exists!');
-      }
-    } else {
-      alert('Please fill all fields!');
-    }
-  });
+        // Camera positioning
+        camera.position.z = 5;
 
-  // Handle Login
-  document.getElementById('login-btn').addEventListener('click', () => {
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
+        // Mouse drag controls for rotating the model
+        let isMouseDown = false;
+        let previousMousePosition = { x: 0, y: 0 };
 
-    const user = users.find(user => user.email === email && user.password === password);
-    
-    if (user) {
-      loggedInUser = email;
-      localStorage.setItem('loggedInUser', loggedInUser);
-      alert('Login successful!');
-      location.reload();
-    } else {
-      alert('Invalid email or password');
-    }
-  });
+        window.addEventListener('mousedown', (e) => {
+            isMouseDown = true;
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        });
 
-  // Like Button Functionality
-  document.querySelectorAll('.like-btn').forEach((btn, index) => {
-    btn.addEventListener('click', () => {
-      const likesSpan = btn.closest('.video-card').querySelector('.likes span');
-      likesSpan.textContent = parseInt(likesSpan.textContent) + 1;
-    });
-  });
+        window.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
 
-  // Show comment section
-  document.querySelectorAll('.comment-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const commentSection = btn.closest('.video-card').querySelector('.comments-section');
-      commentSection.classList.toggle('hidden');
-    });
-  });
+        window.addEventListener('mousemove', (e) => {
+            if (!isMouseDown) return;
 
-  // Add comment to video
-  document.querySelectorAll('.comment-input button').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const commentText = btn.previousElementSibling.value;
-      const commentList = btn.closest('.video-card').querySelector('.comments-list');
-      if (commentText) {
-        const newComment = document.createElement('div');
-        newComment.textContent = commentText;
-        commentList.appendChild(newComment);
-        btn.previousElementSibling.value = ''; // Reset input
-      }
-    });
-  });
+            const deltaMove = {
+                x: e.clientX - previousMousePosition.x,
+                y: e.clientY - previousMousePosition.y
+            };
 
-</script>
+            scene.rotation.y += deltaMove.x * 0.01; // Rotate scene horizontally
+            scene.rotation.x += deltaMove.y * 0.01; // Rotate scene vertically
+            
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        });
+
+        // Handle resizing the canvas when window is resized
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+
+        // Animation loop to render the scene and update the rotation
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
 </body>
 </html>
