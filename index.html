@@ -15,7 +15,7 @@
       --button-color: #e0e0e0;
       --button-hover-color: #d4d4d4;
       --border-radius: 20px;
-      --app-scale-duration: 1s;  /* Adjusted to more realistic animation */
+      --app-scale-duration: 1s;
       --app-fade-duration: 0.5s;
       --ease-style: cubic-bezier(0.4, 0, 0.2, 1); /* OxygenOS/One UI 7 curve */
     }
@@ -52,6 +52,8 @@
       justify-content: space-evenly;
       width: 100%;
       padding: 10px 20px;
+      gap: 20px;
+      z-index: 10;
     }
 
     .app-icon {
@@ -174,33 +176,16 @@
       }
     }
 
-    /* Cooldown Slider */
+    /* Remove Cooldown slider styling */
     .slider-container {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    #cooldown-slider {
-      width: 80%;
-    }
-
-    #slider-value {
-      margin-top: 10px;
-      font-size: 1.2rem;
+      display: none;
     }
   </style>
 </head>
 <body>
   <div class="home">
-    <!-- Cooldown Slider -->
-    <div class="slider-container">
-      <label for="cooldown-slider">Cooldown: <span id="slider-value">5s</span></label>
-      <input type="range" id="cooldown-slider" min="1" max="15" value="5" />
-      <button id="change-button">Change</button>
-    </div>
-
+    <!-- Removed Cooldown Slider & Button -->
+    
     <!-- App Icons -->
     <div class="container">
       <div class="app-icon" data-app="app1">App 1</div>
@@ -239,23 +224,8 @@
   </div>
 
   <script>
-    // Set cooldown value based on slider
-    const slider = document.getElementById('cooldown-slider');
-    const sliderValue = document.getElementById('slider-value');
-    let cooldownTime = parseInt(slider.value);
-
-    // Update displayed value when the slider changes
-    slider.addEventListener('input', () => {
-      sliderValue.textContent = `${slider.value}s`;
-      cooldownTime = parseInt(slider.value);
-    });
-
-    // Update cooldown when "Change" button is clicked
-    const changeButton = document.getElementById('change-button');
-    changeButton.addEventListener('click', () => {
-      document.documentElement.style.setProperty('--app-scale-duration', `${cooldownTime}s`);
-      alert(`Cooldown time changed to ${cooldownTime}s!`);
-    });
+    // Manually set cooldown duration in code:
+    let cooldownTime = 5; // Default cooldown time in seconds
 
     // Open App Logic: Ensuring only one app window is active
     document.querySelectorAll('.app-icon').forEach(icon => {
@@ -270,7 +240,7 @@
         // Open the new app with the new cooldown duration
         const appWindow = document.getElementById(appId);
         appWindow.classList.add('active');
-        appWindow.style.transition = `top var(--app-scale-duration) ease, transform var(--app-scale-duration) ease, opacity var(--app-fade-duration) ease`;
+        appWindow.style.transition = `top ${cooldownTime}s ease, transform ${cooldownTime}s ease, opacity 0.5s ease`;
       });
     });
 
