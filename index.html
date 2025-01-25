@@ -14,8 +14,8 @@
       --button-color: #e0e0e0;
       --button-hover-color: #d4d4d4;
       --border-radius: 20px;
-      --app-scale-duration: 1s;
-      --app-fade-duration: 0.5s;
+      --app-scale-duration: 0.1s;
+      --app-fade-duration: 0.1s;
     }
 
     body {
@@ -208,7 +208,7 @@
         document.getElementById(appId).classList.add('active');
         setTimeout(() => {
           window.cooldownActive = false;
-        }, 2500);
+        }, 100);
       });
     });
 
