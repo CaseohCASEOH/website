@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OneUI-Inspired with Navigation Buttons</title>
+  <title>XOS-1 Prototype</title>
   <style>
-    /* Base Variables */
     :root {
       --primary-color: #0f73ee;
       --secondary-color: #ffffff;
@@ -17,10 +16,8 @@
       --border-radius: 20px;
       --app-scale-duration: 1s;
       --app-fade-duration: 0.5s;
-      --ease-style: cubic-bezier(0.4, 0, 0.2, 1); /* OxygenOS/One UI 7 curve */
     }
 
-    /* General Styles */
     body {
       font-family: 'Arial', sans-serif;
       margin: 0;
@@ -31,7 +28,6 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
-      flex-direction: column;
     }
 
     .home {
@@ -44,24 +40,20 @@
       position: relative;
     }
 
-    /* Stacked App Icons */
     .container {
-      position: absolute;
-      bottom: 80px; /* Increased spacing from the bottom */
-      display: flex;
-      justify-content: space-evenly;
-      width: 100%;
-      padding: 10px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 100px));
       gap: 20px;
-      z-index: 10;
+      margin-top: 20px;
+      justify-content: center;
     }
 
     .app-icon {
-      width: 70px;
-      height: 70px;
+      width: 80px;
+      height: 80px;
       background-color: var(--secondary-color);
-      border-radius: 12px;
-      box-shadow: 0 4px 10px var(--shadow-color);
+      border-radius: var(--border-radius);
+      box-shadow: 0 8px 16px var(--shadow-color);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -69,21 +61,19 @@
       font-weight: bold;
       color: var(--text-color);
       cursor: pointer;
-      transition: transform 0.4s var(--ease-style), background-color 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .app-icon:hover {
-      transform: scale(1.2);
+      transform: scale(1.1);
       background-color: #f0f0f0;
-      box-shadow: 0 8px 16px var(--shadow-color);
+      box-shadow: 0 12px 24px var(--shadow-color);
     }
 
-    /* App Window */
     .app-window {
       position: fixed;
-      top: 100%;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%) scale(0.9);
       width: 90%;
       height: 80%;
       max-width: 400px;
@@ -91,21 +81,20 @@
       background-color: var(--secondary-color);
       border-radius: var(--border-radius);
       box-shadow: 0 12px 24px var(--shadow-color);
+      transform: translate(-50%, -50%) scale(0.8);
       opacity: 0;
       visibility: hidden;
       z-index: 1000;
-      transition: top var(--app-scale-duration) ease, transform var(--app-scale-duration) ease, opacity var(--app-fade-duration) ease, visibility 0s linear var(--app-scale-duration);
+      transition: transform var(--app-scale-duration) ease, opacity var(--app-fade-duration) ease, visibility 0s linear var(--app-scale-duration);
     }
 
     .app-window.active {
-      top: 50%;
+      transform: translate(-50%, -50%) scale(1);
       opacity: 1;
       visibility: visible;
-      transform: translateX(-50%) scale(1);
-      transition: top var(--app-scale-duration) ease, transform var(--app-scale-duration) ease, opacity var(--app-fade-duration) ease;
+      transition: transform var(--app-scale-duration) ease, opacity var(--app-fade-duration) ease;
     }
 
-    /* Header */
     .app-header {
       background-color: var(--primary-color);
       color: var(--secondary-color);
@@ -115,7 +104,6 @@
       border-radius: var(--border-radius) var(--border-radius) 0 0;
     }
 
-    /* Content */
     .app-content {
       padding: 16px;
       color: var(--text-color);
@@ -125,10 +113,9 @@
       height: calc(100% - 64px);
     }
 
-    /* Navigation Bar */
     .nav-bar {
       position: fixed;
-      bottom: 20px; /* Increased bottom margin to avoid sticking to the bottom edge */
+      bottom: 0;
       width: 100%;
       height: 60px;
       background-color: var(--secondary-color);
@@ -138,7 +125,6 @@
       box-shadow: 0 -2px 10px var(--shadow-color);
       gap: 40px;
       padding: 0 20px;
-      z-index: 100;
     }
 
     .nav-button {
@@ -171,8 +157,8 @@
         font-size: 16px;
       }
       .app-icon {
-        width: 55px;
-        height: 55px;
+        width: 70px;
+        height: 70px;
         font-size: 12px;
       }
     }
@@ -180,36 +166,29 @@
 </head>
 <body>
   <div class="home">
-    <!-- App Icons -->
     <div class="container">
       <div class="app-icon" data-app="app1">App 1</div>
       <div class="app-icon" data-app="app2">App 2</div>
       <div class="app-icon" data-app="app3">App 3</div>
     </div>
-
-    <!-- Navigation Bar -->
     <div class="nav-bar">
       <div class="nav-button" id="nav-back">←</div>
       <div class="nav-button" id="nav-home">⌂</div>
       <div class="nav-button" id="nav-recents">≡</div>
     </div>
   </div>
-
-  <!-- App Windows -->
   <div class="app-window" id="app1">
     <div class="app-header">App 1</div>
     <div class="app-content">
       <p>Welcome to App 1! This is your dashboard.</p>
     </div>
   </div>
-
   <div class="app-window" id="app2">
     <div class="app-header">App 2</div>
     <div class="app-content">
       <p>Welcome to App 2! Manage your content here.</p>
     </div>
   </div>
-
   <div class="app-window" id="app3">
     <div class="app-header">App 3</div>
     <div class="app-content">
@@ -218,47 +197,38 @@
   </div>
 
   <script>
-    // Manually set cooldown duration in code:
-    let cooldownTime = 5; // Default cooldown time in seconds
-
-    // Open App Logic: Ensuring only one app window is active
     document.querySelectorAll('.app-icon').forEach(icon => {
       icon.addEventListener('click', () => {
         const appId = icon.getAttribute('data-app');
-
-        // Close any currently active app
+        if (window.cooldownActive) return;
+        window.cooldownActive = true;
         document.querySelectorAll('.app-window.active').forEach(activeApp => {
           activeApp.classList.remove('active');
         });
-
-        // Open the new app with the new cooldown duration
-        const appWindow = document.getElementById(appId);
-        appWindow.classList.add('active');
-        appWindow.style.transition = `top ${cooldownTime}s ease, transform ${cooldownTime}s ease, opacity 0.5s ease`;
+        document.getElementById(appId).classList.add('active');
+        setTimeout(() => {
+          window.cooldownActive = false;
+        }, 2500);
       });
     });
 
-    // Navigation Buttons
     const navHome = document.getElementById('nav-home');
     const navBack = document.getElementById('nav-back');
     const navRecents = document.getElementById('nav-recents');
 
-    // Home Button: Close All Apps
     navHome.addEventListener('click', () => {
       document.querySelectorAll('.app-window.active').forEach(app => {
         app.classList.remove('active');
       });
     });
 
-    // Back Button: Close the Top App
     navBack.addEventListener('click', () => {
       const activeApp = document.querySelector('.app-window.active');
       if (activeApp) activeApp.classList.remove('active');
     });
 
-    // Recents Button: Show an Alert
     navRecents.addEventListener('click', () => {
-      alert('Recents clicked! Implement your recents logic here.');
+      alert('Recents clicked!');
     });
   </script>
 </body>
