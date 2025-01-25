@@ -15,7 +15,7 @@
       --button-color: #e0e0e0;
       --button-hover-color: #d4d4d4;
       --border-radius: 20px;
-      --app-scale-duration: 0.5s;
+      --app-scale-duration: 5s;  /* Default cooldown to 5 seconds */
       --app-fade-duration: 0.3s;
     }
 
@@ -27,9 +27,10 @@
       background-color: var(--background-color);
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-end;  /* Ensure apps are at the bottom */
       height: 100vh;
       overflow: hidden;
+      flex-direction: column;
     }
 
     .home {
@@ -42,11 +43,13 @@
       position: relative;
     }
 
+    /* App Container at Bottom */
     .container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(80px, 100px));
       gap: 20px;
-      margin-top: 20px;
+      margin-top: auto;  /* Ensure this goes to the bottom */
+      margin-bottom: 10%;
       justify-content: center;
     }
 
@@ -73,10 +76,10 @@
       box-shadow: 0 12px 24px var(--shadow-color);
     }
 
-    /* App Window */
+    /* App Window Animation from Bottom to Top */
     .app-window {
       position: fixed;
-      top: 50%;
+      bottom: -80%;  /* Initially hidden outside the viewport */
       left: 50%;
       width: 90%;
       height: 80%;
@@ -85,18 +88,17 @@
       background-color: var(--secondary-color);
       border-radius: var(--border-radius);
       box-shadow: 0 12px 24px var(--shadow-color);
-      transform: translate(-50%, -50%) scale(0.8);
+      transform: translateX(-50%);
       opacity: 0;
       visibility: hidden;
-      z-index: 1000;
       transition: transform var(--app-scale-duration) ease, opacity var(--app-fade-duration) ease, visibility 0s linear var(--app-scale-duration);
     }
 
     .app-window.active {
-      transform: translate(-50%, -50%) scale(1);
+      bottom: 10%; /* Move to visible position */
       opacity: 1;
       visibility: visible;
-      transition: transform var(--app-scale-duration) ease, opacity var(--app-fade-duration) ease;
+      transition: transform var(--app-scale-duration) ease, opacity var(--app-fade-duration) ease, bottom var(--app-scale-duration) ease;
     }
 
     /* Header */
@@ -169,10 +171,34 @@
         font-size: 12px;
       }
     }
+
+    /* Cooldown Slider */
+    .slider-container {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    #cooldown-slider {
+      width: 80%;
+    }
+
+    #slider-value {
+      margin-top: 10px;
+      font-size: 1.2rem;
+    }
   </style>
 </head>
 <body>
   <div class="home">
+    <!-- Cooldown Slider -->
+    <div class="slider-container">
+      <label for="cooldown-slider">Cooldown: <span id="slider-value">5s</span></label>
+      <input type="range" id="cooldown-slider" min="1" max="15" value="5" />
+      <button id="change-button">Change</button>
+    </div>
+
     <!-- App Icons -->
     <div class="container">
       <div class="app-icon" data-app="app1">App 1</div>
@@ -211,7 +237,25 @@
   </div>
 
   <script>
-    // Ensure only one app window is active at a time
+    // Set cooldown value based on slider
+    const slider = document.getElementById('cooldown-slider');
+    const sliderValue = document.getElementById('slider-value');
+    let cooldownTime = parseInt(slider.value);
+
+    // Update displayed value when the slider changes
+    slider.addEventListener('input', () => {
+      sliderValue.textContent = `${slider.value}s`;
+      cooldownTime = parseInt(slider.value);
+    });
+
+    // Update cooldown when "Change" button is clicked
+    const changeButton = document.getElementById('change-button');
+    changeButton.addEventListener('click', () => {
+      document.documentElement.style.setProperty('--app-scale-duration', `${cooldownTime}s`);
+      alert(`Cooldown time changed to ${cooldownTime}s!`);
+    });
+
+    // Open App Logic: Ensuring only one app window is active
     document.querySelectorAll('.app-icon').forEach(icon => {
       icon.addEventListener('click', () => {
         const appId = icon.getAttribute('data-app');
@@ -221,8 +265,10 @@
           activeApp.classList.remove('active');
         });
 
-        // Open the new app
-        document.getElementById(appId).classList.add('active');
+        // Open the new app with the new cooldown duration
+        const appWindow = document.getElementById(appId);
+        appWindow.classList.add('active');
+        appWindow.style.transition = `transform var(--app-scale-duration) ease, opacity var(--app-fade-duration) ease`;
       });
     });
 
