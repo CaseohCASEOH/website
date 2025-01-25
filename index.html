@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OneUI-Inspired Smooth Animations</title>
+  <title>OneUI Swipe-to-Close App</title>
   <style>
     /* Base Variables */
     :root {
@@ -102,35 +102,29 @@
       font-size: 14px;
       text-align: center;
       overflow-y: auto;
-      height: calc(100% - 64px);
+      height: calc(100% - 100px);
     }
 
-    /* Close Button */
-    .close-btn {
+    /* Swipe Bar */
+    .swipe-bar {
+      width: 80px;
+      height: 6px;
+      background-color: #d4d4d4;
+      border-radius: 50px;
+      margin: 16px auto;
       position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 36px;
-      height: 36px;
-      background-color: var(--secondary-color);
-      border: none;
-      border-radius: 50%;
-      box-shadow: 0 4px 8px var(--shadow-color);
+      bottom: 16px;
       cursor: pointer;
     }
 
-    .close-btn:after {
-      content: "✕";
-      display: block;
-      font-size: 18px;
-      line-height: 36px;
-      color: var(--primary-color);
-      text-align: center;
+    .swipe-bar:active {
+      background-color: #aaaaaa;
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- App Icons -->
     <div class="app-icon" data-app="app1">App 1</div>
     <div class="app-icon" data-app="app2">App 2</div>
     <div class="app-icon" data-app="app3">App 3</div>
@@ -139,26 +133,26 @@
   <!-- App Windows -->
   <div class="app-window" id="app1">
     <div class="app-header">App 1</div>
-    <button class="close-btn"></button>
     <div class="app-content">
       <p>Welcome to App 1! This is your dashboard.</p>
     </div>
+    <div class="swipe-bar" data-close="app1"></div>
   </div>
 
   <div class="app-window" id="app2">
     <div class="app-header">App 2</div>
-    <button class="close-btn"></button>
     <div class="app-content">
       <p>Welcome to App 2! Manage your content here.</p>
     </div>
+    <div class="swipe-bar" data-close="app2"></div>
   </div>
 
   <div class="app-window" id="app3">
     <div class="app-header">App 3</div>
-    <button class="close-btn"></button>
     <div class="app-content">
       <p>Welcome to App 3! Explore the settings.</p>
     </div>
+    <div class="swipe-bar" data-close="app3"></div>
   </div>
 
   <script>
@@ -171,10 +165,11 @@
       });
     });
 
-    // Close App
-    document.querySelectorAll('.close-btn').forEach(button => {
-      button.addEventListener('click', () => {
-        const appWindow = button.closest('.app-window');
+    // Swipe-to-Close
+    document.querySelectorAll('.swipe-bar').forEach(bar => {
+      bar.addEventListener('click', () => {
+        const appId = bar.getAttribute('data-close');
+        const appWindow = document.getElementById(appId);
         appWindow.classList.remove('active');
       });
     });
