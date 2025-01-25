@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OneUI Swipe-to-Close App</title>
+  <title>OneUI Inspired with Home Swipe Button</title>
   <style>
     /* Base Variables */
     :root {
@@ -30,10 +30,21 @@
       overflow: hidden;
     }
 
+    .home {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
     .container {
       display: grid;
       grid-template-columns: repeat(3, 100px);
       gap: 20px;
+      margin-top: 20px;
     }
 
     /* App Icon */
@@ -102,32 +113,37 @@
       font-size: 14px;
       text-align: center;
       overflow-y: auto;
-      height: calc(100% - 100px);
+      height: calc(100% - 64px);
     }
 
-    /* Swipe Bar */
-    .swipe-bar {
-      width: 80px;
-      height: 6px;
-      background-color: #d4d4d4;
-      border-radius: 50px;
-      margin: 16px auto;
+    /* Swipe Button on Home Screen */
+    .swipe-button {
       position: absolute;
-      bottom: 16px;
+      bottom: 20px;
+      width: 60px;
+      height: 10px;
+      background-color: #cccccc;
+      border-radius: 50px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
-    .swipe-bar:active {
+    .swipe-button:hover {
       background-color: #aaaaaa;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="home">
     <!-- App Icons -->
-    <div class="app-icon" data-app="app1">App 1</div>
-    <div class="app-icon" data-app="app2">App 2</div>
-    <div class="app-icon" data-app="app3">App 3</div>
+    <div class="container">
+      <div class="app-icon" data-app="app1">App 1</div>
+      <div class="app-icon" data-app="app2">App 2</div>
+      <div class="app-icon" data-app="app3">App 3</div>
+    </div>
+
+    <!-- Swipe Button -->
+    <div class="swipe-button" id="close-apps"></div>
   </div>
 
   <!-- App Windows -->
@@ -136,7 +152,6 @@
     <div class="app-content">
       <p>Welcome to App 1! This is your dashboard.</p>
     </div>
-    <div class="swipe-bar" data-close="app1"></div>
   </div>
 
   <div class="app-window" id="app2">
@@ -144,7 +159,6 @@
     <div class="app-content">
       <p>Welcome to App 2! Manage your content here.</p>
     </div>
-    <div class="swipe-bar" data-close="app2"></div>
   </div>
 
   <div class="app-window" id="app3">
@@ -152,7 +166,6 @@
     <div class="app-content">
       <p>Welcome to App 3! Explore the settings.</p>
     </div>
-    <div class="swipe-bar" data-close="app3"></div>
   </div>
 
   <script>
@@ -165,11 +178,10 @@
       });
     });
 
-    // Swipe-to-Close
-    document.querySelectorAll('.swipe-bar').forEach(bar => {
-      bar.addEventListener('click', () => {
-        const appId = bar.getAttribute('data-close');
-        const appWindow = document.getElementById(appId);
+    // Swipe Button to Close All Apps
+    const swipeButton = document.getElementById('close-apps');
+    swipeButton.addEventListener('click', () => {
+      document.querySelectorAll('.app-window.active').forEach(appWindow => {
         appWindow.classList.remove('active');
       });
     });
