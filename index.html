@@ -3,35 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>title</title>
+  <title>Screen Time Goal Setter</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-      background: #f4f4f9;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f0f8ff;
       color: #333;
-    }
-    h1 {
-      color: #444;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
     .container {
-      display: inline-block;
-      padding: 20px;
-      background: white;
+      text-align: center;
+      background: #fff;
+      padding: 40px;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #007bff;
+      font-size: 24px;
+      margin-bottom: 20px;
     }
     select, button {
       padding: 10px;
       font-size: 16px;
-      margin: 5px;
+      margin: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
     }
     button {
       background: #007bff;
-      color: white;
+      color: #fff;
       cursor: pointer;
       transition: background 0.3s;
     }
@@ -53,7 +58,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Made By aabbaaii14 On Discord<h1>
+    <h1>Screen Time Goal Setter By aabbaaii14 On Discord</h1>
     <div>
       <select id="days">
         <option value="0">0d</option>
@@ -90,6 +95,7 @@
         <option value="21">21h</option>
         <option value="22">22h</option>
         <option value="23">23h</option>
+        <option value="24">24h</option>
       </select>
       <select id="minutes">
         <option value="0">0m</option>
@@ -216,8 +222,8 @@
         <option value="59">59s</option>
       </select>
     </div>
-    <button onclick="startTimer()">Start Timer</button>
-    <button onclick="stopTimer()">Reset Timer</button>
+    <button onclick="startTimer()">Start The Timer</button>
+    <button onclick="stopTimer()">Reset The Timer</button>
     <div id="goalDisplay"></div>
     <div id="timerDisplay">00:00:00</div>
   </div>
