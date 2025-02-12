@@ -1,32 +1,190 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>website title</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        video {
-            width: 80%;
-            max-width: 800px;
-            border: 2px solid #333;
-            border-radius: 10px;
-        }
-    </style>
+<title>FastOS</title>
+<style>
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #f0f0f0; /* Light gray background */
+}
+
+#desktop {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap; /* Allow icons to wrap */
+  padding: 20px;
+}
+
+.icon {
+  width: 80px;
+  height: 80px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.icon img {
+  width: 64px;
+  height: 64px;
+}
+
+.icon span {
+  margin-top: 5px;
+  text-align: center;
+}
+
+.window {
+  position: absolute;
+  border: 1px solid #ccc;
+  background-color: white;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  overflow: hidden; /* Hide content that overflows the window */
+}
+
+.window-titlebar {
+  background-color: #eee;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: move; /* Indicate that the window is draggable */
+}
+
+.window-title {
+    font-weight: bold;
+}
+
+.window-content {
+  padding: 10px;
+}
+
+/* Style for the terminal window */
+#terminal {
+  background-color: black;
+  color: lime; /* Green text on black background */
+  font-family: monospace;
+  overflow: auto; /* Add scrollbars if content overflows */
+  white-space: pre-wrap; /* Preserve whitespace and wrap text */
+}
+</style>
 </head>
 <body>
 
-    <h1>My Video For Wonders.</h1>
-    <video controls>
-        <source src="video.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+<div id="desktop">
+  <div class="icon" onclick="openApp('text-editor')">
+    <img src="placeholder.png" alt="Text Editor">
+    <span>Text Editor</span>
+  </div>
+  <div class="icon" onclick="openApp('terminal')">
+    <img src="placeholder.png" alt="Terminal">
+    <span>Terminal</span>
+  </div>
+  </div>
+
+<div id="text-editor" class="window" style="left: 50px; top: 50px; width: 300px; height: 200px; display: none;">
+  <div class="window-titlebar" onmousedown="startDrag(this.parentNode)">
+      <span class="window-title">Text Editor</span>
+      <span onclick="closeApp('text-editor')" style="cursor:pointer;">[x]</span>
+  </div>
+  <div class="window-content">
+    <textarea style="width: 100%; height: 100%; border: none;"></textarea>
+  </div>
+</div>
+
+<div id="terminal" class="window" style="left: 100px; top: 100px; width: 400px; height: 250px; display: none;">
+    <div class="window-titlebar" onmousedown="startDrag(this.parentNode)">
+        <span class="window-title">Terminal</span>
+        <span onclick="closeApp('terminal')" style="cursor:pointer;">[x]</span>
+    </div>
+  <div class="window-content" id="terminal-output">
+      </div>
+    <input type="text" id="terminal-input" style="width: 100%; background-color: black; color: lime; border: none;" onkeydown="handleTerminalInput(event)">
+</div>
+
+
+<script>
+function openApp(appName) {
+  document.getElementById(appName).style.display = "block";
+}
+
+function closeApp(appName) {
+  document.getElementById(appName).style.display = "none";
+}
+
+let isDragging = false;
+let currentWindow = null;
+let offsetX, offsetY;
+
+function startDrag(windowElement) {
+    isDragging = true;
+    currentWindow = windowElement;
+    offsetX = event.clientX - windowElement.offsetLeft;
+    offsetY = event.clientY - windowElement.offsetTop;
+
+    window.addEventListener('mousemove', dragWindow);
+    window.addEventListener('mouseup', endDrag);
+
+}
+
+function dragWindow(event) {
+    if (isDragging && currentWindow) {
+        const x = event.clientX - offsetX;
+        const y = event.clientY - offsetY;
+
+        currentWindow.style.left = x + 'px';
+        currentWindow.style.top = y + 'px';
+    }
+}
+
+function endDrag() {
+    isDragging = false;
+    currentWindow = null;
+
+    window.removeEventListener('mousemove', dragWindow);
+    window.removeEventListener('mouseup', endDrag);
+}
+
+
+// Terminal functionality
+const terminalOutput = document.getElementById('terminal-output');
+const terminalInput = document.getElementById('terminal-input');
+
+function handleTerminalInput(event) {
+    if (event.key === 'Enter') {
+        const command = terminalInput.value;
+        terminalOutput.innerHTML += '> ' + command + '<br>'; // Display the command
+
+        // Process the command (replace with your actual command logic)
+        const output = executeCommand(command);
+        terminalOutput.innerHTML += output + '<br>';
+
+        terminalInput.value = ''; // Clear the input field
+
+        // Scroll to the bottom to show the latest output
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    }
+}
+
+function executeCommand(command) {
+    // Replace this with your actual command handling logic
+    switch (command) {
+        case 'help':
+            return 'Available commands: help, date, echo';
+        case 'date':
+            return new Date().toString();
+        case 'echo':
+            return 'Echo command executed';
+        default:
+            return 'Command not found: ' + command;
+    }
+}
+
+</script>
 
 </body>
 </html>
