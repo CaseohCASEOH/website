@@ -6,11 +6,12 @@ window.onload = function () {
   const savedTimeLeft = localStorage.getItem("timeLeft");
 
   if (savedGoal) {
-    document.getElementById("goalDisplay").innerText = `Your Goal: ${savedGoal}`;
+    document.getElementById("goaldisplay").innerText = `Goal: ${savedGoal}`;
   }
   if (savedTimeLeft) {
     timeLeft = parseInt(savedTimeLeft);
     updateTimerDisplay();
+    timer = setInterval(updatetimer, 1000);
   }
 };
 
@@ -34,31 +35,31 @@ function startTimer() {
   }
 }
 
-function resettimer() {
+function stopTimer() {
   clearInterval(timer);
   timeLeft = 0;
   localStorage.removeItem("timeLeft");
-  document.getElementById("timerDisplay").innerText = "00:00:00";
-  document.getElementById("goalDisplay").innerText = "";
+  document.getElementById("timerfisplay").innerText = "00:00:00";
+  document.getElementById("goaldisplay").innerText = "";
 }
 
-function updatetimert() {
+function updateTimer() {
   if (timeLeft > 0) {
     timeLeft--;
     localStorage.setItem("timeLeft", timeLeft);
     updateTimerDisplay();
   } else {
     clearInterval(timer);
-    alert("Goal Is Finshed!");
+    alert("Time's up!");
   }
 }
 
-function updatetimer() {
+function updateTimerDisplay() {
   const days = Math.floor(timeLeft / 86400);
   const hours = Math.floor((timeLeft % 86400) / 3600);
   const minutes = Math.floor((timeLeft % 3600) / 60);
   const seconds = timeLeft % 60;
 
-  document.getElementById("timerDisplay").innerText =
+  document.getElementById("timerdisplay").innerText =
     `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
