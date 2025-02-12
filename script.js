@@ -6,12 +6,12 @@ window.onload = function () {
   const savedTimeLeft = localStorage.getItem("timeLeft");
 
   if (savedGoal) {
-    document.getElementById("goaldisplay").innerText = `Goal: ${savedGoal}`;
+    document.getElementById("goalDisplay").innerText = `Goal: ${savedGoal}`;
   }
   if (savedTimeLeft) {
     timeLeft = parseInt(savedTimeLeft);
     updateTimerDisplay();
-    timer = setInterval(updatetimer, 1000);
+    timer = setInterval(updateTimer, 1000);
   }
 };
 
@@ -39,8 +39,8 @@ function stopTimer() {
   clearInterval(timer);
   timeLeft = 0;
   localStorage.removeItem("timeLeft");
-  document.getElementById("timerfisplay").innerText = "00:00:00";
-  document.getElementById("goaldisplay").innerText = "";
+  document.getElementById("timerDisplay").innerText = "00:00:00";
+  document.getElementById("goalDisplay").innerText = "";
 }
 
 function updateTimer() {
@@ -60,6 +60,6 @@ function updateTimerDisplay() {
   const minutes = Math.floor((timeLeft % 3600) / 60);
   const seconds = timeLeft % 60;
 
-  document.getElementById("timerdisplay").innerText =
+  document.getElementById("timerDisplay").innerText =
     `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
