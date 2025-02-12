@@ -2,11 +2,12 @@
 <html>
 <head>
 <title>FastOS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  <style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
 body {
   margin: 0;
   font-family: sans-serif;
-  overflow: hidden; /* Prevent scrollbars on the body */
+  overflow: hidden;
 }
 
 #desktop {
@@ -14,9 +15,9 @@ body {
   height: 100%;
   position: absolute;
   display: flex;
-  flex-wrap: wrap; /* Icons wrap */
-  justify-content: center; /* Center icons horizontally */
-  align-content: flex-start; /* Align icons to the top */
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
   padding: 20px;
   background-color: #f0f0f0;
 }
@@ -31,28 +32,37 @@ body {
   cursor: pointer;
 }
 
-.icon img {
+.icon-shape {
   width: 64px;
   height: 64px;
+  background-color: #333; /* Dark gray */
+  border-radius: 10px; /* Rounded corners */
+  margin-bottom: 5px; /* Space between shape and label */
 }
 
 .icon span {
-  margin-top: 5px;
   text-align: center;
-  font-size: 12px; /* Smaller font for mobile */
+  font-size: 12px;
 }
 
 .window {
   position: absolute;
-  top: 0; /* Start at the top */
-  left: 0; /* Start at the left */
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  border: none; /* No border */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-color: white;
-  box-shadow: none; /* No shadow */
   overflow: hidden;
-  display: none; /* Initially hidden */
+  display: none;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transitions */
+  opacity: 0; /* Initially hidden */
+  transform: translateY(100%); /* Initially off-screen */
+}
+
+.window.active { /* Class added when window is open */
+  opacity: 1;
+  transform: translateY(0%);
+  display: block; /* Make the window visible */
 }
 
 .window-titlebar {
@@ -67,64 +77,69 @@ body {
   font-weight: bold;
 }
 
+.window-close {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #ddd;
+    border: none;
+}
+
+
 .window-content {
   padding: 10px;
-  height: calc(100% - 40px); /* Account for title bar height */
-  overflow-y: auto; /* Scroll if content overflows */
+  height: calc(100% - 50px); /* Adjusted for close button */
+  overflow-y: auto;
 }
 
 /* ... (Terminal styles remain the same) ... */
-
-/* Media query for larger screens (if you want different layout on desktop/tablet) */
-@media (min-width: 768px) {
-    #desktop {
-        justify-content: flex-start;
-    }
-    .window {
-        top: 50px;
-        left: 50px;
-        width: 80%;
-        height: 80%;
-    }
-}
-
 </style>
 </head>
 <body>
 
-<div id="desktop">
-  </div>
+<div id="desktop"></div>
 
 <script>
-    const desktop = document.getElementById('desktop');
+const desktop = document.getElementById('desktop');
 
-    const apps = [
-        { name: 'Text Editor', icon: 'placeholder.png', id: 'text-editor', content: '<textarea style="width: 100%; height: 100%; border: none;"></textarea>' },
-        { name: 'Terminal', icon: 'placeholder.png', id: 'terminal', content: `<div class="window-content" id="terminal-output"></div><input type="text" id="terminal-input" style="width: 100%; background-color: black; color: lime; border: none;" onkeydown="handleTerminalInput(event)">` },
-        // Add more apps here...
-    ];
+const apps = [
+    { name: 'Text Editor', id: 'text-editor', content: '<textarea style="width: 100%; height: 100%; border: none;"></textarea>' },
+    { name: 'Terminal', id: 'terminal', content: `<div class="window-content" id="terminal-output"></div><input type="text" id="terminal-input" style="width: 100%; background-color: black; color: lime; border: none;" onkeydown="handleTerminalInput(event)">` },
+    // Add more apps here...
+];
 
-    apps.forEach(app => {
-        const icon = document.createElement('div');
-        icon.className = 'icon';
-        icon.onclick = () => openApp(app.id);
-        icon.innerHTML = `<img src="${app.icon}" alt="${app.name}"><span>${app.name}</span>`;
-        desktop.appendChild(icon);
+apps.forEach(app => {
+    const icon = document.createElement('div');
+    icon.className = 'icon';
+    icon.onclick = () => openApp(app.id);
+    icon.innerHTML = `<div class="icon-shape"></div><span>${app.name}</span>`;
+    desktop.appendChild(icon);
 
-        const windowDiv = document.createElement('div');
-        windowDiv.id = app.id;
-        windowDiv.className = 'window';
-        windowDiv.innerHTML = `
-            <div class="window-titlebar" onmousedown="startDrag(this.parentNode)">
-                <span class="window-title">${app.name}</span>
-                <span onclick="closeApp('${app.id}')" style="cursor:pointer;">[x]</span>
-            </div>
-            ${app.content}
-        `;
-        document.body.appendChild(windowDiv);
-    });
+    const windowDiv = document.createElement('div');
+    windowDiv.id = app.id;
+    windowDiv.className = 'window';
+    windowDiv.innerHTML = `
+        <div class="window-titlebar">
+            <span class="window-title">${app.name}</span>
+            <button class="window-close" onclick="closeApp('${app.id}')">[x]</button>
+        </div>
+        ${app.content}
+    `;
+    document.body.appendChild(windowDiv);
+});
 
-// ... (Rest of the JavaScript code - openApp, closeApp, drag, terminal - remains the same)
+function openApp(appName) {
+    const windowElement = document.getElementById(appName);
+    windowElement.classList.add('active'); // Add the 'active' class
+}
+
+function closeApp(appName) {
+    const windowElement = document.getElementById(appName);
+    windowElement.classList.remove('active'); // Remove the 'active' class
+}
+
+
+// ... (Rest of the JavaScript code - drag, terminal - remains the same) ...
 
 </script>
 
