@@ -2,232 +2,176 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Screen Time Goal Setter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YouTube Downloader</title>
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #f0f8ff;
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
       margin: 0;
+      padding: 20px;
     }
     .container {
-      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
       background: #fff;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-radius: 8px;
     }
-    h1 {
-      color: #007bff;
-      font-size: 24px;
+    h1, h2, h3 {
+      text-align: center;
+    }
+    form {
+      display: flex;
+      justify-content: center;
       margin-bottom: 20px;
     }
-    select, button {
+    input[type="text"] {
+      width: 70%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px 0 0 4px;
+      font-size: 16px;
+    }
+    button[type="submit"] {
+      padding: 10px 20px;
+      border: none;
+      background: #0073e6;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 0 4px 4px 0;
+    }
+    button[type="submit"]:hover {
+      background: #005bb5;
+    }
+    #videoDetails {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #videoDetails img {
+      width: 320px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    .download-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .download-options select,
+    .download-options button {
       padding: 10px;
       font-size: 16px;
-      margin: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      margin: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
     }
-    button {
-      background: #007bff;
+    .download-options button {
+      background: #28a745;
       color: #fff;
+      border: none;
       cursor: pointer;
-      transition: background 0.3s;
     }
-    button:hover {
-      background: #0056b3;
-    }
-    #goalDisplay {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #555;
-    }
-    #timerDisplay {
-      font-size: 32px;
-      font-weight: bold;
-      margin-top: 20px;
-      color: #007bff;
+    .download-options button:hover {
+      background: #218838;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Made By aabbaaii14 On Discord</h1>
-    <div>
-      <select id="days">
-        <option value="0">0d</option>
-        <option value="1">1d</option>
-        <option value="2">2d</option>
-        <option value="3">3d</option>
-        <option value="4">4d</option>
-        <option value="5">5d</option>
-        <option value="6">6d</option>
-        <option value="7">7d</option>
-      </select>
-      <select id="hours">
-        <option value="0">0h</option>
-        <option value="1">1h</option>
-        <option value="2">2h</option>
-        <option value="3">3h</option>
-        <option value="4">4h</option>
-        <option value="5">5h</option>
-        <option value="6">6h</option>
-        <option value="7">7h</option>
-        <option value="8">8h</option>
-        <option value="9">9h</option>
-        <option value="10">10h</option>
-        <option value="11">11h</option>
-        <option value="12">12h</option>
-        <option value="13">13h</option>
-        <option value="14">14h</option>
-        <option value="15">15h</option>
-        <option value="16">16h</option>
-        <option value="17">17h</option>
-        <option value="18">18h</option>
-        <option value="19">19h</option>
-        <option value="20">20h</option>
-        <option value="21">21h</option>
-        <option value="22">22h</option>
-        <option value="23">23h</option>
-        <option value="24">24h</option>
-      </select>
-      <select id="minutes">
-        <option value="0">0m</option>
-        <option value="1">1m</option>
-        <option value="2">2m</option>
-        <option value="3">3m</option>
-        <option value="4">4m</option>
-        <option value="5">5m</option>
-        <option value="6">6m</option>
-        <option value="7">7m</option>
-        <option value="8">8m</option>
-        <option value="9">9m</option>
-        <option value="10">10m</option>
-        <option value="11">11m</option>
-        <option value="12">12m</option>
-        <option value="13">13m</option>
-        <option value="14">14m</option>
-        <option value="15">15m</option>
-        <option value="16">16m</option>
-        <option value="17">17m</option>
-        <option value="18">18m</option>
-        <option value="19">19m</option>
-        <option value="20">20m</option>
-        <option value="21">21m</option>
-        <option value="22">22m</option>
-        <option value="23">23m</option>
-        <option value="24">24m</option>
-        <option value="25">25m</option>
-        <option value="26">26m</option>
-        <option value="27">27m</option>
-        <option value="28">28m</option>
-        <option value="29">29m</option>
-        <option value="30">30m</option>
-        <option value="31">31m</option>
-        <option value="32">32m</option>
-        <option value="33">33m</option>
-        <option value="34">34m</option>
-        <option value="35">35m</option>
-        <option value="36">36m</option>
-        <option value="37">37m</option>
-        <option value="38">38m</option>
-        <option value="39">39m</option>
-        <option value="40">40m</option>
-        <option value="41">41m</option>
-        <option value="42">42m</option>
-        <option value="43">43m</option>
-        <option value="44">44m</option>
-        <option value="45">45m</option>
-        <option value="46">46m</option>
-        <option value="47">47m</option>
-        <option value="48">48m</option>
-        <option value="49">49m</option>
-        <option value="50">50m</option>
-        <option value="51">51m</option>
-        <option value="52">52m</option>
-        <option value="53">53m</option>
-        <option value="54">54m</option>
-        <option value="55">55m</option>
-        <option value="56">56m</option>
-        <option value="57">57m</option>
-        <option value="58">58m</option>
-        <option value="59">59m</option>
-      </select>
-      <select id="seconds">
-        <option value="0">0s</option>
-        <option value="1">1s</option>
-        <option value="2">2s</option>
-        <option value="3">3s</option>
-        <option value="4">4s</option>
-        <option value="5">5s</option>
-        <option value="6">6s</option>
-        <option value="7">7s</option>
-        <option value="8">8s</option>
-        <option value="9">9s</option>
-        <option value="10">10s</option>
-        <option value="11">11s</option>
-        <option value="12">12s</option>
-        <option value="13">13s</option>
-        <option value="14">14s</option>
-        <option value="15">15s</option>
-        <option value="16">16s</option>
-        <option value="17">17s</option>
-        <option value="18">18s</option>
-        <option value="19">19s</option>
-        <option value="20">20s</option>
-        <option value="21">21s</option>
-        <option value="22">22s</option>
-        <option value="23">23s</option>
-        <option value="24">24s</option>
-        <option value="25">25s</option>
-        <option value="26">26s</option>
-        <option value="27">27s</option>
-        <option value="28">28s</option>
-        <option value="29">29s</option>
-        <option value="30">30s</option>
-        <option value="31">31s</option>
-        <option value="32">32s</option>
-        <option value="33">33s</option>
-        <option value="34">34s</option>
-        <option value="35">35s</option>
-        <option value="36">36s</option>
-        <option value="37">37s</option>
-        <option value="38">38s</option>
-        <option value="39">39s</option>
-        <option value="40">40s</option>
-        <option value="41">41s</option>
-        <option value="42">42s</option>
-        <option value="43">43s</option>
-        <option value="44">44s</option>
-        <option value="45">45s</option>
-        <option value="46">46s</option>
-        <option value="47">47s</option>
-        <option value="48">48s</option>
-        <option value="49">49s</option>
-        <option value="50">50s</option>
-        <option value="51">51s</option>
-        <option value="52">52s</option>
-        <option value="53">53s</option>
-        <option value="54">54s</option>
-        <option value="55">55s</option>
-        <option value="56">56s</option>
-        <option value="57">57s</option>
-        <option value="58">58s</option>
-        <option value="59">59s</option>
-      </select>
+    <h1>YouTube Video/Short Downloader</h1>
+    <form id="searchForm">
+      <input type="text" id="videoInput" placeholder="Enter video URL or search term" required>
+      <button type="submit">Search</button>
+    </form>
+
+    <!-- Video details will be populated here after search -->
+    <div id="videoDetails" style="display: none;">
+      <h2>Video Details</h2>
+      <img id="videoThumbnail" src="" alt="Video Thumbnail">
+      <p id="videoTitle"></p>
     </div>
-    <button onclick="startTimer()">Start The Timer</button>
-    <button onclick="stopTimer()">Reset The Timer</button>
-    <div id="goalDisplay"></div>
-    <div id="timerDisplay">00:00:00</div>
+
+    <!-- Download options -->
+    <div id="downloadSection" style="display: none;">
+      <div class="download-options">
+        <div>
+          <h3>Download Video</h3>
+          <select id="videoQuality">
+            <option value="2160p">4K</option>
+            <option value="1440p">2K</option>
+            <option value="1080p">1080p</option>
+            <option value="720p">720p</option>
+            <option value="480p">480p</option>
+            <option value="240p">240p</option>
+            <option value="144p">144p</option>
+          </select>
+          <button id="downloadVideo">Download Video</button>
+        </div>
+        <div>
+          <h3>Download Audio</h3>
+          <select id="audioQuality">
+            <option value="256kbps">256 kbps</option>
+            <option value="128kbps">128 kbps</option>
+            <option value="64kbps">64 kbps</option>
+            <option value="32kbps">32 kbps</option>
+            <option value="16kbps">16 kbps</option>
+            <option value="8kbps">8 kbps</option>
+          </select>
+          <button id="downloadAudio">Download Audio</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // Demo front-end script. Replace dummy data with your backend API call.
+    let currentVideoId = "";
+
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const query = document.getElementById('videoInput').value.trim();
+      if (!query) return;
+      
+      // Replace with your backend API call to search for the video by URL or name.
+      // For demonstration, using dummy data.
+      const dummyData = {
+        title: "Example Video Title",
+        thumbnail: "https://via.placeholder.com/320x180.png?text=Thumbnail",
+        videoId: "exampleVideoId"
+      };
+
+      // Populate video details on the page.
+      document.getElementById('videoTitle').textContent = dummyData.title;
+      document.getElementById('videoThumbnail').src = dummyData.thumbnail;
+      document.getElementById('videoDetails').style.display = 'block';
+      document.getElementById('downloadSection').style.display = 'block';
+      currentVideoId = dummyData.videoId;
+    });
+
+    document.getElementById('downloadVideo').addEventListener('click', function() {
+      const quality = document.getElementById('videoQuality').value;
+      // Construct the download URL.
+      // Implement the backend endpoint that handles video conversion and watermark removal.
+      const downloadUrl = "https://your-backend.com/download?videoId=" + currentVideoId + "&type=video&quality=" + quality;
+      // Initiate download.
+      window.location.href = downloadUrl;
+    });
+
+    document.getElementById('downloadAudio').addEventListener('click', function() {
+      const bitrate = document.getElementById('audioQuality').value;
+      // Construct the download URL.
+      // Your backend should extract audio at the chosen bitrate.
+      const downloadUrl = "https://your-backend.com/download?videoId=" + currentVideoId + "&type=audio&bitrate=" + bitrate;
+      // Initiate download.
+      window.location.href = downloadUrl;
+    });
+  </script>
 </body>
 </html>
