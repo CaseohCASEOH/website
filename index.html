@@ -1,177 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>YouTube Downloader</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 700px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 30px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      border-radius: 8px;
-    }
-    h1, h2, h3 {
-      text-align: center;
-    }
-    form {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    input[type="text"] {
-      width: 70%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px 0 0 4px;
-      font-size: 16px;
-    }
-    button[type="submit"] {
-      padding: 10px 20px;
-      border: none;
-      background: #0073e6;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 0 4px 4px 0;
-    }
-    button[type="submit"]:hover {
-      background: #005bb5;
-    }
-    #videoDetails {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    #videoDetails img {
-      width: 320px;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 4px;
-      margin-bottom: 10px;
-    }
-    .download-options {
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .download-options select,
-    .download-options button {
-      padding: 10px;
-      font-size: 16px;
-      margin: 5px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-    .download-options button {
-      background: #28a745;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-    }
-    .download-options button:hover {
-      background: #218838;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>YouTube Video/Short Downloader</h1>
-    <form id="searchForm">
-      <input type="text" id="videoInput" placeholder="Enter video URL or search term" required>
-      <button type="submit">Search</button>
-    </form>
+<!doctype html>
+<html dir="ltr" lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <title>Новая вкладка</title>
+    <style>
+      body {
+        background: #FFFFFF;
+        margin: 0;
+      }
 
-    <!-- Video details will be populated here after search -->
-    <div id="videoDetails" style="display: none;">
-      <h2>Video Details</h2>
-      <img id="videoThumbnail" src="" alt="Video Thumbnail">
-      <p id="videoTitle"></p>
-    </div>
+      #backgroundImage {
+        border: none;
+        height: 100%;
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+        visibility: hidden;
+        width: 100%;
+      }
 
-    <!-- Download options -->
-    <div id="downloadSection" style="display: none;">
-      <div class="download-options">
-        <div>
-          <h3>Download Video</h3>
-          <select id="videoQuality">
-            <option value="2160p">4K</option>
-            <option value="1440p">2K</option>
-            <option value="1080p">1080p</option>
-            <option value="720p">720p</option>
-            <option value="480p">480p</option>
-            <option value="240p">240p</option>
-            <option value="144p">144p</option>
-          </select>
-          <button id="downloadVideo">Download Video</button>
-        </div>
-        <div>
-          <h3>Download Audio</h3>
-          <select id="audioQuality">
-            <option value="256kbps">256 kbps</option>
-            <option value="128kbps">128 kbps</option>
-            <option value="64kbps">64 kbps</option>
-            <option value="32kbps">32 kbps</option>
-            <option value="16kbps">16 kbps</option>
-            <option value="8kbps">8 kbps</option>
-          </select>
-          <button id="downloadAudio">Download Audio</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Demo front-end script. Replace dummy data with your backend API call.
-    let currentVideoId = "";
-
-    document.getElementById('searchForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const query = document.getElementById('videoInput').value.trim();
-      if (!query) return;
-      
-      // Replace with your backend API call to search for the video by URL or name.
-      // For demonstration, using dummy data.
-      const dummyData = {
-        title: "Example Video Title",
-        thumbnail: "https://via.placeholder.com/320x180.png?text=Thumbnail",
-        videoId: "exampleVideoId"
-      };
-
-      // Populate video details on the page.
-      document.getElementById('videoTitle').textContent = dummyData.title;
-      document.getElementById('videoThumbnail').src = dummyData.thumbnail;
-      document.getElementById('videoDetails').style.display = 'block';
-      document.getElementById('downloadSection').style.display = 'block';
-      currentVideoId = dummyData.videoId;
-    });
-
-    document.getElementById('downloadVideo').addEventListener('click', function() {
-      const quality = document.getElementById('videoQuality').value;
-      // Construct the download URL.
-      // Implement the backend endpoint that handles video conversion and watermark removal.
-      const downloadUrl = "https://your-backend.com/download?videoId=" + currentVideoId + "&type=video&quality=" + quality;
-      // Initiate download.
-      window.location.href = downloadUrl;
-    });
-
-    document.getElementById('downloadAudio').addEventListener('click', function() {
-      const bitrate = document.getElementById('audioQuality').value;
-      // Construct the download URL.
-      // Your backend should extract audio at the chosen bitrate.
-      const downloadUrl = "https://your-backend.com/download?videoId=" + currentVideoId + "&type=audio&bitrate=" + bitrate;
-      // Initiate download.
-      window.location.href = downloadUrl;
-    });
-  </script>
-</body>
+      [show-background-image] #backgroundImage {
+        visibility: visible;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe id="backgroundImage" src=""></iframe>
+    <ntp-app></ntp-app>
+    <script type="module" src="new_tab_page.js"></script>
+    <link rel="stylesheet" href="chrome://resources/css/text_defaults_md.css">
+    <link rel="stylesheet" href="chrome://theme/colors.css?sets=ui,chrome">
+    <link rel="stylesheet" href="shared_vars.css">
+  </body>
 </html>
