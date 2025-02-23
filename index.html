@@ -47,7 +47,7 @@
       text-align: center;
       position: relative;
       z-index: 2;
-      transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+      transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
     }
 
     .glow {
@@ -120,4 +120,12 @@
         const data = await response.json();
         document.getElementById(elementId).textContent = data.ip;
       } catch (error) {
-        document.getElementById(elementId).textContent = `yo
+        document.getElementById(elementId).textContent = `you don't have ${type}`;
+      }
+    }
+
+    fetchIP("ipv4", "https://api.ipify.org?format=json", "ipv4");
+    fetchIP("ipv6", "https://api64.ipify.org?format=json", "ipv6");
+  </script>
+</body>
+</html>
