@@ -42,19 +42,36 @@
 
     .container {
       background: rgba(0, 0, 0, 0.8);
-      border: 2px solid rgba(255, 255, 255, 0.3);
       border-radius: 20px;
       padding: 30px;
       text-align: center;
       position: relative;
       z-index: 2;
-      transition: transform 0.5s ease, box-shadow 0.5s ease;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+    }
+
+    .glow {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0) 70%);
+      border-radius: 30px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      animation: fireGlow 3s infinite alternate;
+      z-index: -1;
+    }
+
+    @keyframes fireGlow {
+      0% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+      50% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.8); }
+      100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
     }
 
     .container:hover, .container:active {
-      transform: scale(1.05) rotate(360deg);
-      box-shadow: 0 0 40px rgba(255, 255, 255, 0.7);
+      transform: scale(1.1);
+      box-shadow: 0 0 50px rgba(255, 255, 255, 0.9);
     }
 
     h1 {
@@ -77,6 +94,7 @@
 </head>
 <body>
   <div class="container">
+    <div class="glow"></div>
     <h1>your ip addresses</h1>
     <p><strong>ipv4:</strong> <span id="ipv4" class="ip">fetching...</span></p>
     <p><strong>ipv6:</strong> <span id="ipv6" class="ip">fetching...</span></p>
@@ -102,12 +120,4 @@
         const data = await response.json();
         document.getElementById(elementId).textContent = data.ip;
       } catch (error) {
-        document.getElementById(elementId).textContent = `you don't have ${type}`;
-      }
-    }
-
-    fetchIP("ipv4", "https://api.ipify.org?format=json", "ipv4");
-    fetchIP("ipv6", "https://api64.ipify.org?format=json", "ipv6");
-  </script>
-</body>
-</html>
+        document.getElementById(elementId).textContent = `yo
