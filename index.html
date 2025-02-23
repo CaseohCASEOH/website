@@ -1,80 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>title</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>title</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            font-family: Arial, sans-serif;
-            color: white;
-            text-align: center;
-        }
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: white;
+      font-size: 1em;
+      opacity: 0.8;
+      user-select: none;
+      pointer-events: none;
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
 
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
 
-        .container:hover, .container:active {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
+    body {
+      background: black;
+      color: white;
+      font-family: arial, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        h1 {
-            margin-bottom: 10px;
-            font-size: 24px;
-        }
+    .container {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
 
-        p {
-            font-size: 18px;
-            margin: 5px 0;
-        }
+    .container:hover, .container:active {
+      transform: scale(1.05) rotate(360deg);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.7);
+    }
 
-        .ip {
-            font-size: 20px;
-            font-weight: bold;
-            color: #f1f1f1;
-            text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.7);
-        }
-    </style>
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.8);
+    }
+
+    p {
+      font-size: 20px;
+      margin: 10px 0;
+    }
+
+    .ip {
+      font-size: 22px;
+      font-weight: bold;
+      text-shadow: 0 0 8px rgba(255,255,255,0.9);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>your ip address</h1>
-        <p><strong>IPv4:</strong> <span id="ipv4" class="ip">fetching...</span></p>
-        <p><strong>IPv6:</strong> <span id="ipv6" class="ip">fetching....</span></p>
-    </div>
+  <div class="container">
+    <h1>your ip addresses</h1>
+    <p><strong>ipv4:</strong> <span id="ipv4" class="ip">fetching...</span></p>
+    <p><strong>ipv6:</strong> <span id="ipv6" class="ip">fetching...</span></p>
+  </div>
 
-    <script>
-        async function fetchip(elementId, url, type) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error("No response");
-                const data = await response.json();
-                document.getElementById(elementId).textContent = data.ip;
-            } catch (error) {
-                document.getElementById(elementId).textContent = `You don't have ${type}`;
-            }
-        }
+  <script>
+    const numFlakes = 50;
+    for (let i = 0; i < numFlakes; i++) {
+      let snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      snowflake.style.left = Math.random() * 100 + 'vw';
+      snowflake.style.fontSize = Math.random() * 1.5 + 0.5 + 'em';
+      snowflake.style.animationDuration = Math.random() * 3 + 4 + 's';
+      snowflake.style.animationDelay = Math.random() * 5 + 's';
+      snowflake.innerHTML = '&#10052;';
+      document.body.appendChild(snowflake);
+    }
 
-        fetchip("ipv4", "https://api.ipify.org?format=json", "IPv4");
-        fetchip("ipv6", "https://api64.ipify.org?format=json", "IPv6");
-    </script>
+    async function fetchIP(elementId, url, type) {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("no response");
+        const data = await response.json();
+        document.getElementById(elementId).textContent = data.ip;
+      } catch (error) {
+        document.getElementById(elementId).textContent = `you don't have ${type}`;
+      }
+    }
+
+    fetchIP("ipv4", "https://api.ipify.org?format=json", "ipv4");
+    fetchIP("ipv6", "https://api64.ipify.org?format=json", "ipv6");
+  </script>
 </body>
 </html>
