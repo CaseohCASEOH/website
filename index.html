@@ -1,36 +1,80 @@
-<!doctype html>
-<html dir="ltr" lang="ru">
-  <head>
-    <meta charset="utf-8">
-    <title>Новая вкладка</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>title</title>
     <style>
-      body {
-        background: #FFFFFF;
-        margin: 0;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-      #backgroundImage {
-        border: none;
-        height: 100%;
-        pointer-events: none;
-        position: fixed;
-        top: 0;
-        visibility: hidden;
-        width: 100%;
-      }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+        }
 
-      [show-background-image] #backgroundImage {
-        visibility: visible;
-      }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container:hover, .container:active {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+
+        .ip {
+            font-size: 20px;
+            font-weight: bold;
+            color: #f1f1f1;
+            text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.7);
+        }
     </style>
-    <!-- Moved link elements from body to head -->
-    <link rel="stylesheet" href="chrome://resources/css/text_defaults_md.css">
-    <link rel="stylesheet" href="chrome://theme/colors.css?sets=ui,chrome">
-    <link rel="stylesheet" href="shared_vars.css">
-  </head>
-  <body>
-    <iframe id="backgroundImage" src=""></iframe>
-    <ntp-app></ntp-app>
-    <script type="module" src="new_tab_page.js"></script>
-  </body>
+</head>
+<body>
+    <div class="container">
+        <h1>your ip address</h1>
+        <p><strong>IPv4:</strong> <span id="ipv4" class="ip">fetching...</span></p>
+        <p><strong>IPv6:</strong> <span id="ipv6" class="ip">fetching....</span></p>
+    </div>
+
+    <script>
+        async function fetchip(elementId, url, type) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("No response");
+                const data = await response.json();
+                document.getElementById(elementId).textContent = data.ip;
+            } catch (error) {
+                document.getElementById(elementId).textContent = `You don't have ${type}`;
+            }
+        }
+
+        fetchip("ipv4", "https://api.ipify.org?format=json", "IPv4");
+        fetchip("ipv6", "https://api64.ipify.org?format=json", "IPv6");
+    </script>
+</body>
 </html>
