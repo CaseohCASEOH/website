@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #ff0000;
+            color: white;
+            padding: 10px;
+        }
+
+        #uploadSection {
+            margin: 20px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        #videoGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            padding: 10px;
+        }
+
+        .video {
+            background: #f4f4f4;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .video img {
+            width: 100%;
+        }
+
+        #playerContainer {
+            display: none;
+        }
+
+        video {
+            width: 80%;
+            margin: 20px auto;
+            display: block;
+        }
+
+        #commentSection {
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #f0f0f0;
+            padding: 5px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>YouTube Clone</h1>
+    </header>
+
+    <div id="uploadSection">
+        <input type="file" id="videoUpload" accept="video/*">
+        <button onclick="uploadVideo()">Upload Video</button>
+    </div>
+
+    <div id="videoGrid"></div>
+
+    <div id="playerContainer">
+        <video id="videoPlayer" controls></video>
+        <button id="likeBtn">👍 <span id="likeCount">0</span></button>
+
+        <div id="commentSection">
+            <h3>Comments</h3>
+            <input type="text" id="commentInput" placeholder="Add a comment...">
+            <button id="commentBtn">Post</button>
+            <ul id="commentsList"></ul>
+        </div>
+        <button onclick="goBack()">🔙 Back</button>
+    </div>
+
+    <script>
+        let videos = JSON.parse(localStorage.getItem("videos")) || [];
+
+        function uploadVideo() {
+            const fileInput = document.getElementById("videoUpload");
+            if (fileInput.files.length === 0) {
+                alert("Please select a video to upload.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const videoURL = URL.createObjectURL(file);
+            const videoId = Date.now();
+
+            const videoData = {
+                id: videoId,
+                title: file.name,
+                src: videoURL,
+                thumbnail: videoURL
+            };
+
+            videos.push(videoData);
+            localStorage.setItem("videos", JSON.stringify(videos));
+
+            loadVideos();
+        }
+
+        function loadVideos() {
+            const grid = document.getElementById("videoGrid");
+            grid.innerHTML = "";
+            videos.forEach(video => {
+                const videoElement = document.createElement("div");
+                videoElement.className = "video";
+                videoElement.innerHTML = `
+                    <img src="${video.thumbnail}" onclick="playVideo(${video.id})">
+                    <p>${video.title}</p>
+                `;
+                grid.appendChild(videoElement);
+            });
+        }
+
+        function playVideo(id) {
+            const videoData = videos.find(v => v.id === id);
+
+            document.getElementById("videoGrid").style.display = "none";
+            document.getElementById("playerContainer").style.display = "block";
+
+            document.getElementById("videoPlayer").src = videoData.src;
+
+            let likeCount = localStorage.getItem(`likes-${videoData.id}`) || 0;
+            document.getElementById("likeCount").innerText = likeCount;
+
+            loadComments(videoData.id);
+        }
+
+        function goBack() {
+            document.getElementById("videoGrid").style.display = "grid";
+            document.getElementById("playerContainer").style.display = "none";
+            document.getElementById("videoPlayer").pause();
+        }
+
+        document.getElementById("likeBtn").addEventListener("click", function() {
+            const videoData = videos.find(v => v.src === document.getElementById("videoPlayer").src);
+            let likeCount = localStorage.getItem(`likes-${videoData.id}`) || 0;
+            likeCount++;
+            localStorage.setItem(`likes-${videoData.id}`, likeCount);
+            document.getElementById("likeCount").innerText = likeCount;
+        });
+
+        document.getElementById("commentBtn").addEventListener("click", function() {
+            const videoData = videos.find(v => v.src === document.getElementById("videoPlayer").src);
+            const commentInput = document.getElementById("commentInput");
+            if (commentInput.value.trim()) {
+                const commentsList = document.getElementById("commentsList");
+                const li = document.createElement("li");
+                li.innerText = commentInput.value;
+                commentsList.appendChild(li);
+
+                let storedComments = JSON.parse(localStorage.getItem(`comments-${videoData.id}`)) || [];
+                storedComments.push(commentInput.value);
+                localStorage.setItem(`comments-${videoData.id}`, JSON.stringify(storedComments));
+
+                commentInput.value = "";
+            }
+        });
+
+        function loadComments(videoId) {
+            const commentsList = document.getElementById("commentsList");
+            commentsList.innerHTML = "";
+            const storedComments = JSON.parse(localStorage.getItem(`comments-${videoId}`)) || [];
+            storedComments.forEach(comment => {
+                const li = document.createElement("li");
+                li.innerText = comment;
+                commentsList.appendChild(li);
+            });
+        }
+
+        loadVideos();
+    </script>
+</body>
+</html>
